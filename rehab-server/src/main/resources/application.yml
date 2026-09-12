@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: rehab-course-reservation
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${REHAB_DB_URL:jdbc:mysql://localhost:3306/rehab_course?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai}
+    username: ${REHAB_DB_USERNAME:root}
+    password: ${REHAB_DB_PASSWORD:684564}
+  redis:
+    host: ${REHAB_REDIS_HOST:localhost}
+    port: ${REHAB_REDIS_PORT:6379}
+  rabbitmq:
+    host: ${REHAB_RABBITMQ_HOST:localhost}
+    port: ${REHAB_RABBITMQ_PORT:5672}
+    username: ${REHAB_RABBITMQ_USERNAME:guest}
+    password: ${REHAB_RABBITMQ_PASSWORD:guest}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 1
+        default-requeue-rejected: false
+        retry:
+          enabled: true
+          initial-interval: 1s
+          max-attempts: 5
+          multiplier: 2
+          max-interval: 10s
+
+rehab:
+  auth:
+    access-token-ttl-minutes: ${REHAB_ACCESS_TOKEN_TTL_MINUTES:15}
+    refresh-token-ttl-days: ${REHAB_REFRESH_TOKEN_TTL_DAYS:7}
+    max-session-ttl-days: ${REHAB_MAX_SESSION_TTL_DAYS:30}
+    refresh-cookie-secure: ${REHAB_REFRESH_COOKIE_SECURE:false}
+  websocket:
+    allowed-origin-patterns: ${REHAB_WS_ALLOWED_ORIGINS:http://localhost:*,https://localhost:*}
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

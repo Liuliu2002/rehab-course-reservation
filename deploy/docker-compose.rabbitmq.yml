@@ -1,0 +1,16 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: rehab-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${REHAB_RABBITMQ_USERNAME:-guest}
+      RABBITMQ_DEFAULT_PASS: ${REHAB_RABBITMQ_PASSWORD:-guest}
+    volumes:
+      - rehab-rabbitmq-data:/var/lib/rabbitmq
+
+volumes:
+  rehab-rabbitmq-data:
